@@ -53,12 +53,6 @@ public class TileEntityKeyRack extends TileEntity implements IInventory
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int index) 
-	{
-		return inventory.getStackInSlotOnClosing(index);
-	}
-
-	@Override
 	public void setInventorySlotContents(int index, ItemStack stack) 
 	{
 		inventory.setInventorySlotContents(index, stack);
@@ -174,5 +168,10 @@ public class TileEntityKeyRack extends TileEntity implements IInventory
 		NBTTagCompound tagCom = new NBTTagCompound();
 		this.writeToNBT(tagCom);
 		return new S35PacketUpdateTileEntity(pos, getBlockMetadata(), tagCom);
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return inventory.removeStackFromSlot(index);
 	}
 }
