@@ -32,66 +32,59 @@ import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class KeyEvents 
-{
+public class KeyEvents {
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onPlayerInteract(PlayerInteractEvent event)
-	{
-		Block block = event.world.getBlockState(event.pos).getBlock();
-		TileEntity tileEntity = event.world.getTileEntity(event.pos);
-		if(event.action == Action.RIGHT_CLICK_BLOCK)
-		{
-			event.setCanceled(LockManager.onInteract(block, tileEntity, event.entityPlayer, event.world, event.pos));
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (event.pos != null) {
+			Block block = event.world.getBlockState(event.pos).getBlock();
+			TileEntity tileEntity = event.world.getTileEntity(event.pos);
+			if (event.action == Action.RIGHT_CLICK_BLOCK) {
+				event.setCanceled(
+						LockManager.onInteract(block, tileEntity, event.entityPlayer, event.world, event.pos));
+			}
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void onOpenContainer(PlayerOpenContainerEvent event)
-	{
+	public void onOpenContainer(PlayerOpenContainerEvent event) {
 		ItemStack current = event.entityPlayer.getCurrentEquippedItem();
-		if(current != null)
-		{
-			if(current.getItem() == KeyItems.item_key_ring) 
-			{
+		if (current != null) {
+			if (current.getItem() == KeyItems.item_key_ring) {
 				current.clearCustomName();
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void onBreakBlock(BreakEvent event)
-	{
-		if(event.world.isRemote)
+	public void onBreakBlock(BreakEvent event) {
+		if (event.world.isRemote)
 			return;
 
 		BlockPos pos = LockManager.isLockAround(event.world, event.pos);
-		if(pos != null)
-		{
+		if (pos != null) {
+			//should just check to see if player has the keys to open the door
 			Block block = event.world.getBlockState(pos).getBlock();
 			event.setCanceled(!block.canPlaceBlockAt(event.world, pos));
 		}
 	}
-	
-	//TODO change to item
-	/*@SubscribeEvent
-	public void onPlaceBlock(PlaceEvent event)
-	{
-		if(event.world.isRemote)
-			return;
-		
-		if(event.placedBlock.getBlock() instanceof BlockDoor && event.world.getBlockState(event.pos).getBlock() != Blocks.iron_door)
-		{
-			LockedDoorData lockedDoorData = LockedDoorData.get(event.world);
-			lockedDoorData.addDoor(event.pos);
-		}
-	}*/
-	
+
+	// TODO change to item
+
 	@SubscribeEvent
-	public void onNeighbourChange(NeighborNotifyEvent event)
-	{
+	public void onPlaceBlock(PlaceEvent event) {
+		if (event.world.isRemote)
+			return;
+
+		if (event.placedBlock.getBlock() instanceof BlockDoor
+				&& event.world.getBlockState(event.pos).getBlock() != Blocks.iron_door) {
+			WorldLockData.get(event.world).addLock(event.pos);
+		}
+	}
+
+	@SubscribeEvent
+	public void onNeighbourChange(NeighborNotifyEvent event) {
 		BlockPos pos = LockManager.isLockAround(event.world, event.pos);
-		if(pos != null)
-		{
+		if (pos != null) {
 			Block block = event.world.getBlockState(pos).getBlock();
 			TileEntity tileEntity = event.world.getTileEntity(pos);
 			event.setCanceled(true);
