@@ -1,5 +1,7 @@
 package com.mrcrayfish.key;
 
+import org.apache.logging.log4j.Logger;
+
 import com.mrcrayfish.key.blocks.KeyBlocks;
 import com.mrcrayfish.key.event.KeyEvents;
 import com.mrcrayfish.key.gui.GuiHandler;
@@ -31,6 +33,8 @@ public class MrCrayfishKeyMod {
 	public static CommonProxy proxy;
 
 	public static CreativeTabs tabKey = new KeyTab("tabKey");
+	
+	public static Logger logger;
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -53,6 +57,8 @@ public class MrCrayfishKeyMod {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		
+		logger = event.getModLog();
 		/** Initialize and Register Blocks */
 		KeyBlocks.register();
 		KeyBlocks.registerBlocks();
