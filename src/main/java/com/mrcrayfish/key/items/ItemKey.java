@@ -84,34 +84,4 @@ public class ItemKey extends Item
 		}
 		return true;
 	}
-	
-	/*@Override
-	@SideOnly(Side.CLIENT)
-	public int getMetadata(ItemStack stack) 
-	{
-		ItemStack inUseStack = Minecraft.getMinecraft().thePlayer.getItemInUse();
-		if(inUseStack != null)
-		{
-			if(inUseStack.getItem() == this)
-			{
-				return 1;
-			}
-		}
-		return 0;
-	}
-	
-	@Override
-    public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
-    {
-        playerIn.setItemInUse(itemStackIn, 72000);
-        return itemStackIn;
-    }
-	
-	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn) 
-	{
-		System.out.println(Minecraft.getMinecraft().objectMouseOver.entityHit);
-		//playerIn.attackTargetEntityWithCurrentItem(null);
-		return super.onItemUseFinish(stack, worldIn, playerIn);
-	}*/
 }

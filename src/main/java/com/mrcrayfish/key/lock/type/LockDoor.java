@@ -24,7 +24,6 @@ public class LockDoor implements ILock
 	@Override
 	public boolean handleInteract(EntityPlayer player, World world, BlockPos pos) 
 	{
-		System.out.println("Test");
 		if(world.getBlockState(pos).getBlock() instanceof BlockDoor && world.getBlockState(pos).getBlock() != Blocks.iron_door)
 		{
 			BlockDoor blockDoor = (BlockDoor) world.getBlockState(pos).getBlock();
@@ -114,7 +113,7 @@ public class LockDoor implements ILock
 						return false;
 					}
 				}
-			}
+			} 
 		}
 		return false;
 	}

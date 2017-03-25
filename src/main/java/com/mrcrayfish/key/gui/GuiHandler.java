@@ -23,7 +23,6 @@ public class GuiHandler implements IGuiHandler
 			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 			if(tileEntity instanceof TileEntityKeyRack)
 			{
-				System.out.println("Opened GUI Client Side");
 				return new ContainerKeyRack(player.inventory, (TileEntityKeyRack) tileEntity);
 			}
 		}
@@ -42,7 +41,6 @@ public class GuiHandler implements IGuiHandler
 			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 			if(tileEntity instanceof TileEntityKeyRack)
 			{
-				System.out.println("Opened GUI Server Side");
 				return new GuiKeyRack(player.inventory, (TileEntityKeyRack) tileEntity);
 			}
 		}

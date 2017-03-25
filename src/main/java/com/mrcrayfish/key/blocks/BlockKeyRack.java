@@ -53,7 +53,6 @@ public class BlockKeyRack extends BlockDirectional implements ITileEntityProvide
 	@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
-		System.out.println("onNeighborChange");
 		if(this.canPlaceCheck(world, pos, state))
 		{
 			EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
@@ -70,7 +69,6 @@ public class BlockKeyRack extends BlockDirectional implements ITileEntityProvide
 	@Override
 	public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side)
 	{
-		System.out.println("canPlaceBlockOnSide");
 		if(side.getHorizontalIndex() == -1)
 		{
 			return false;
@@ -81,7 +79,6 @@ public class BlockKeyRack extends BlockDirectional implements ITileEntityProvide
 	
 	private boolean canPlaceCheck(World world, BlockPos pos, IBlockState state)
 	{
-		System.out.println("canPlaceCheck");
 		EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
 		if(!this.canPlaceBlockOnSide(world, pos, enumfacing))
 		{

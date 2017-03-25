@@ -24,7 +24,6 @@ public class LockContainer implements ILock
 	@Override
 	public boolean handleInteract(EntityPlayer player, World world, BlockPos pos) 
 	{
-		System.out.println("Handling");
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if(tileEntity instanceof TileEntityLockable)
 		{
