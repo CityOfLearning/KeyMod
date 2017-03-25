@@ -9,39 +9,30 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
-public class GuiHandler implements IGuiHandler 
-{
+public class GuiHandler implements IGuiHandler {
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) 
-	{
-		if(ID == GuiKeys.ID)
-		{
-			return new ContainerKeys(player.inventory, ItemKeys.getInv(player));
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		if (ID == GuiKeys.ID) {
+			return new GuiKeys(player.inventory, ItemKeys.getInv(player), player);
 		}
-		if(ID == GuiKeyRack.ID)
-		{
+		if (ID == GuiKeyRack.ID) {
 			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
-			if(tileEntity instanceof TileEntityKeyRack)
-			{
-				return new ContainerKeyRack(player.inventory, (TileEntityKeyRack) tileEntity);
+			if (tileEntity instanceof TileEntityKeyRack) {
+				return new GuiKeyRack(player.inventory, (TileEntityKeyRack) tileEntity);
 			}
 		}
 		return null;
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) 
-	{
-		if(ID == GuiKeys.ID)
-		{
-			return new GuiKeys(player.inventory, ItemKeys.getInv(player), player);
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		if (ID == GuiKeys.ID) {
+			return new ContainerKeys(player.inventory, ItemKeys.getInv(player));
 		}
-		if(ID == GuiKeyRack.ID)
-		{
+		if (ID == GuiKeyRack.ID) {
 			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
-			if(tileEntity instanceof TileEntityKeyRack)
-			{
-				return new GuiKeyRack(player.inventory, (TileEntityKeyRack) tileEntity);
+			if (tileEntity instanceof TileEntityKeyRack) {
+				return new ContainerKeyRack(player.inventory, (TileEntityKeyRack) tileEntity);
 			}
 		}
 		return null;

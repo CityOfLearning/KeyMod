@@ -23,8 +23,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.NAME, version = Reference.VERSION)
-public class MrCrayfishKeyMod
-{
+public class MrCrayfishKeyMod {
 	@Instance(Reference.MOD_ID)
 	public static MrCrayfishKeyMod instance;
 
@@ -32,36 +31,36 @@ public class MrCrayfishKeyMod
 	public static CommonProxy proxy;
 
 	public static CreativeTabs tabKey = new KeyTab("tabKey");
-	
+
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
+	public void init(FMLInitializationEvent event) {
+		proxy.init();
+
+		MinecraftForge.EVENT_BUS.register(new KeyEvents());
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+
+		GameRegistry.addRecipe(new ItemStack(KeyItems.item_key), "NNI", 'I', Items.gold_ingot, 'N', Items.gold_nugget);
+		GameRegistry.addRecipe(new ItemStack(KeyItems.item_iron_nugget, 9), "I", 'I', Items.iron_ingot);
+		GameRegistry.addRecipe(new ItemStack(KeyItems.item_key_ring), "NNN", "N N", "NNN", 'N',
+				KeyItems.item_iron_nugget);
+		GameRegistry.addRecipe(new ItemStack(Items.iron_ingot), "NNN", "NNN", "NNN", 'N', KeyItems.item_iron_nugget);
+		GameRegistry.addRecipe(new ItemStack(KeyBlocks.block_key_rack), "WWW", "NNN", 'W',
+				new ItemStack(Blocks.log2, 1, 1), 'N', KeyItems.item_iron_nugget);
+
+		GameRegistry.registerTileEntity(TileEntityKeyRack.class, "ckmKeyRack");
+
+	}
+
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
 		/** Initialize and Register Blocks */
 		KeyBlocks.register();
 		KeyBlocks.registerBlocks();
-		
+
 		/** Initialize and Register Items */
 		KeyItems.register();
 		KeyItems.registerItems();
-		
+
 		LockManager.registerTypes();
-	}
-	
-	@EventHandler
-	public void init(FMLInitializationEvent event)
-	{
-		proxy.init();
-		
-		MinecraftForge.EVENT_BUS.register(new KeyEvents());
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-		
-		GameRegistry.addRecipe(new ItemStack(KeyItems.item_key), "NNI", 'I', Items.gold_ingot, 'N', Items.gold_nugget);
-		GameRegistry.addRecipe(new ItemStack(KeyItems.item_iron_nugget, 9), "I", 'I', Items.iron_ingot);
-		GameRegistry.addRecipe(new ItemStack(KeyItems.item_key_ring), "NNN", "N N", "NNN", 'N', KeyItems.item_iron_nugget);
-		GameRegistry.addRecipe(new ItemStack(Items.iron_ingot), "NNN", "NNN", "NNN", 'N', KeyItems.item_iron_nugget);
-		GameRegistry.addRecipe(new ItemStack(KeyBlocks.block_key_rack), "WWW", "NNN", 'W', new ItemStack(Blocks.log2, 1, 1), 'N', KeyItems.item_iron_nugget);
-		
-		GameRegistry.registerTileEntity(TileEntityKeyRack.class, "ckmKeyRack");
-		
 	}
 }

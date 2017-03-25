@@ -7,14 +7,12 @@ import com.mrcrayfish.key.tileentity.render.KeyRackRenderer;
 
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
-public class ClientProxy extends CommonProxy
-{
+public class ClientProxy extends CommonProxy {
 	@Override
-	public void init()
-	{
+	public void init() {
 		KeyItems.registerRenders();
 		KeyBlocks.registerRenders();
-		
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityKeyRack.class, new KeyRackRenderer());
 	}
 }

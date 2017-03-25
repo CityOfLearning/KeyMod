@@ -6,13 +6,13 @@ import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 
 public interface ILock {
-	
-	public boolean handleInteract(EntityPlayer player, World world, BlockPos pos);
-	
-	public boolean handleBreak(EntityPlayer player, World world, BlockPos pos);
-	
-	public LockCode getLockCode(World world, BlockPos pos);
-	
+
 	public BlockPos fix(World world, BlockPos pos);
-	
+
+	public LockCode getLockCode(World world, BlockPos pos);
+
+	public boolean handleBreak(EntityPlayer player, World world, BlockPos pos);
+
+	public boolean handleInteract(EntityPlayer player, World world, BlockPos pos);
+
 }
