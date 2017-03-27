@@ -28,9 +28,13 @@ public class KeyEvents {
 
 		BlockPos pos = LockManager.isLockAround(event.world, event.pos);
 		if (pos != null) {
-			// should just check to see if player has the keys to open the door
 			Block block = event.world.getBlockState(pos).getBlock();
-			event.setCanceled(!block.canPlaceBlockAt(event.world, pos));
+			TileEntity tileEntity = event.world.getTileEntity(event.pos);
+			if (LockManager.onBreak(block, tileEntity, event.getPlayer(), event.world, event.pos)) {
+				event.setCanceled(true);
+				WorldLockData.get(event.world).removeLock(event.pos);
+			}
+
 		}
 	}
 
@@ -54,14 +58,11 @@ public class KeyEvents {
 		}
 	}
 
-	// TODO change to item
-
 	@SubscribeEvent
 	public void onPlaceBlock(PlaceEvent event) {
 		if (event.world.isRemote) {
 			return;
 		}
-
 		if ((event.placedBlock.getBlock() instanceof BlockDoor)
 				&& (event.world.getBlockState(event.pos).getBlock() != Blocks.iron_door)) {
 			WorldLockData.get(event.world).addLock(event.pos);

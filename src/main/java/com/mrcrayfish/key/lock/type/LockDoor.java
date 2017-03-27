@@ -3,6 +3,7 @@ package com.mrcrayfish.key.lock.type;
 import com.mrcrayfish.key.items.KeyItems;
 import com.mrcrayfish.key.lock.ILock;
 import com.mrcrayfish.key.lock.LockData;
+import com.mrcrayfish.key.lock.LockManager;
 import com.mrcrayfish.key.lock.WorldLockData;
 import com.mrcrayfish.key.util.MessageUtil;
 import com.mrcrayfish.key.util.NBTHelper;
@@ -44,6 +45,25 @@ public class LockDoor implements ILock {
 
 	@Override
 	public boolean handleBreak(EntityPlayer player, World world, BlockPos pos) {
+		if ((world.getBlockState(pos).getBlock() instanceof BlockDoor)
+				&& (world.getBlockState(pos).getBlock() != Blocks.iron_door)) {
+			IBlockState state = world.getBlockState(pos);
+			if ((state.getValue(BlockDoor.HALF)) == BlockDoor.EnumDoorHalf.UPPER) {
+				pos = pos.down();
+			}
+
+			WorldLockData worldLockData = WorldLockData.get(world);
+			LockData lockedDoor = worldLockData.getLock(pos);
+			if (lockedDoor != null) {
+				if (lockedDoor.isLocked()) {
+					if (!LockManager.isKeyInInvetory(player, lockedDoor.getLockCode())) {
+						MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW
+								+ "You need to have correct key in your inventory to destroy this block.");
+						return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
 
@@ -51,7 +71,6 @@ public class LockDoor implements ILock {
 	public boolean handleInteract(EntityPlayer player, World world, BlockPos pos) {
 		if ((world.getBlockState(pos).getBlock() instanceof BlockDoor)
 				&& (world.getBlockState(pos).getBlock() != Blocks.iron_door)) {
-			world.getBlockState(pos).getBlock();
 			IBlockState state = world.getBlockState(pos);
 			if ((state.getValue(BlockDoor.HALF)) == BlockDoor.EnumDoorHalf.UPPER) {
 				pos = pos.down();

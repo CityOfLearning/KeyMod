@@ -33,7 +33,7 @@ public class MrCrayfishKeyMod {
 	public static CommonProxy proxy;
 
 	public static CreativeTabs tabKey = new KeyTab("tabKey");
-	
+
 	public static Logger logger;
 
 	@EventHandler
@@ -57,7 +57,7 @@ public class MrCrayfishKeyMod {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		
+
 		logger = event.getModLog();
 		/** Initialize and Register Blocks */
 		KeyBlocks.register();

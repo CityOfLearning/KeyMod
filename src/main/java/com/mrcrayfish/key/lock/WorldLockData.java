@@ -28,10 +28,10 @@ public class WorldLockData extends WorldSavedData {
 	public WorldLockData() {
 		this(IDENTIFIER);
 	}
-	
+
 	public WorldLockData(String identifier) {
 		super(identifier);
-		if(identifier != IDENTIFIER){
+		if (identifier != IDENTIFIER) {
 			MrCrayfishKeyMod.logger.error("Uh oh... the identifiers dont match, its likely that locks will not work");
 		}
 	}
