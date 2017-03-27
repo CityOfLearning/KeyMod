@@ -83,7 +83,7 @@ public class LockManager {
 	public static boolean onBreak(Block block, TileEntity tileEntity, EntityPlayer player, World world, BlockPos pos) {
 		for (Object object : lockTypes.keySet()) {
 			Class clazz = (Class) object;
-			if (clazz.isInstance(block) | clazz.isInstance(tileEntity)) {
+			if (clazz.isInstance(block) || clazz.isInstance(tileEntity)) {
 				return lockTypes.get(object).handleBreak(player, world, pos);
 			}
 		}
@@ -94,11 +94,15 @@ public class LockManager {
 			BlockPos pos) {
 		for (Object object : lockTypes.keySet()) {
 			Class clazz = (Class) object;
-			if (clazz.isInstance(block) | clazz.isInstance(tileEntity)) {
+			if (clazz.isInstance(block) || clazz.isInstance(tileEntity)) {
 				return lockTypes.get(object).handleInteract(player, world, pos);
 			}
 		}
 		return false;
+	}
+
+	public static void registerLock(Class clazz, ILock lock) {
+		lockTypes.put(clazz, lock);
 	}
 
 	public static void registerTypes() {
