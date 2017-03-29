@@ -100,7 +100,7 @@ public class LockManager {
 		}
 		return false;
 	}
-
+	
 	public static void registerLock(Class clazz, ILock lock) {
 		lockTypes.put(clazz, lock);
 	}

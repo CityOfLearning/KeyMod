@@ -43,7 +43,7 @@ public class LockContainer implements ILock {
 			if (tileEntityLockable.isLocked()) {
 				if (!LockManager.isKeyInInvetory(player, tileEntityLockable.getLockCode())) {
 					MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW
-							+ "You need to have correct key in your inventory to destroy this block.");
+							+ "You need to have the correct key in your inventory to destroy this block.");
 					return true;
 				}
 			}
