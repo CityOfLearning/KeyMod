@@ -12,13 +12,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 
 public class WorldLockData extends WorldSavedData {
-	private static final String IDENTIFIER = "locked_data";
+	public static final String IDENTIFIER = "locked_data";
 
+	// TODO: there is probably a better way to check if the data has already
+	// been loaded
 	public static WorldLockData get(World world) {
-		WorldLockData data = (WorldLockData) world.loadItemData(WorldLockData.class, IDENTIFIER);
+		WorldLockData data = (WorldLockData) world.getPerWorldStorage().loadData(WorldLockData.class, IDENTIFIER);
 		if (data == null) {
 			data = new WorldLockData(IDENTIFIER);
-			world.setItemData(IDENTIFIER, data);
+			world.getPerWorldStorage().setData(IDENTIFIER, data);
 		}
 		return data;
 	}
