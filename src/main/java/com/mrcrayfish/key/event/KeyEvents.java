@@ -23,7 +23,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class KeyEvents {
 
-	//we set this to lowest because we only want to remove the lock if no other event listener cancels the event, otherwise we remove the lock and 
+	// we set this to lowest because we only want to remove the lock if no other
+	// event listener cancels the event, otherwise we remove the lock and
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onBreakBlock(BreakEvent event) {
 		if (event.world.isRemote) {
@@ -45,7 +46,7 @@ public class KeyEvents {
 	@SubscribeEvent
 	public void onNeighbourChange(NeighborNotifyEvent event) {
 		// TODO: Need to somehow find if the door can be interacted with
-		//since we wont know which player triggered the event
+		// since we wont know which player triggered the event
 		BlockPos pos = LockManager.isLockAround(event.world, event.pos);
 		if (pos != null) {
 			if ((event.world.getBlockState(pos).getBlock() instanceof BlockDoor)
@@ -75,7 +76,8 @@ public class KeyEvents {
 		}
 	}
 
-	//again we only want to add a lock if no other event listen cancels the event
+	// again we only want to add a lock if no other event listen cancels the
+	// event
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onPlaceBlock(PlaceEvent event) {
 		if (event.world.isRemote) {
