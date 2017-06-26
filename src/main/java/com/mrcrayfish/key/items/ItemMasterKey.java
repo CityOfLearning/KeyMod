@@ -29,38 +29,33 @@ public class ItemMasterKey extends Item {
 	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side,
 			float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
-			if (playerIn.isSneaking()) {
-				EntityPlayerMP playerMp = (EntityPlayerMP) playerIn;
-				TileEntity tileEntity = worldIn.getTileEntity(pos);
-				if (tileEntity instanceof TileEntityLockable) {
-					TileEntityLockable tileEntityLockable = (TileEntityLockable) tileEntity;
-					if (tileEntityLockable.isLocked()) {
-							tileEntityLockable.setLockCode(LockCode.EMPTY_CODE);
-							playerMp.playerNetServerHandler
-									.sendPacket(new S02PacketChat(
-											(new ChatComponentText(
-													EnumChatFormatting.GREEN + "Succesfully unlocked this block.")),
-											(byte) 2));
-					}
-				} else if ((worldIn.getBlockState(pos).getBlock() instanceof BlockDoor)
-						&& (worldIn.getBlockState(pos).getBlock() != Blocks.iron_door)) {
-					worldIn.getBlockState(pos).getBlock();
-					IBlockState state = worldIn.getBlockState(pos);
-					if ((state.getValue(BlockDoor.HALF)) == BlockDoor.EnumDoorHalf.UPPER) {
-						pos = pos.down();
-					}
+			EntityPlayerMP playerMp = (EntityPlayerMP) playerIn;
+			TileEntity tileEntity = worldIn.getTileEntity(pos);
+			if (tileEntity instanceof TileEntityLockable) {
+				TileEntityLockable tileEntityLockable = (TileEntityLockable) tileEntity;
+				if (tileEntityLockable.isLocked()) {
+					tileEntityLockable.setLockCode(LockCode.EMPTY_CODE);
+					playerMp.playerNetServerHandler.sendPacket(new S02PacketChat(
+							(new ChatComponentText(EnumChatFormatting.GREEN + "Succesfully unlocked this block.")),
+							(byte) 2));
+				}
+			} else if ((worldIn.getBlockState(pos).getBlock() instanceof BlockDoor)
+					&& (worldIn.getBlockState(pos).getBlock() != Blocks.iron_door)) {
+				worldIn.getBlockState(pos).getBlock();
+				IBlockState state = worldIn.getBlockState(pos);
+				if ((state.getValue(BlockDoor.HALF)) == BlockDoor.EnumDoorHalf.UPPER) {
+					pos = pos.down();
+				}
 
-					WorldLockData lockedDoorData = WorldLockData.get(worldIn);
-					LockData lockedDoor = lockedDoorData.getLock(pos);
-					if (lockedDoor != null) {
-						if (lockedDoor.isLocked()) {
-								lockedDoor.setLockCode(LockCode.EMPTY_CODE);
-								playerMp.playerNetServerHandler.sendPacket(new S02PacketChat(
-										(new ChatComponentText(
-												EnumChatFormatting.GREEN + "Succesfully unlocked this block.")),
-										(byte) 2));
-								lockedDoorData.markDirty();
-						}
+				WorldLockData lockedDoorData = WorldLockData.get(worldIn);
+				LockData lockedDoor = lockedDoorData.getLock(pos);
+				if (lockedDoor != null) {
+					if (lockedDoor.isLocked()) {
+						lockedDoor.setLockCode(LockCode.EMPTY_CODE);
+						playerMp.playerNetServerHandler.sendPacket(new S02PacketChat(
+								(new ChatComponentText(EnumChatFormatting.GREEN + "Succesfully unlocked this block.")),
+								(byte) 2));
+						lockedDoorData.markDirty();
 					}
 				}
 			}
