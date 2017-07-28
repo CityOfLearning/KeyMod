@@ -56,7 +56,8 @@ public class LockDoor implements ILock {
 			LockData lockedDoor = worldLockData.getLock(pos);
 			if (lockedDoor != null) {
 				if (lockedDoor.isLocked()) {
-					if (!LockManager.isKeyInInvetory(player, lockedDoor.getLockCode())) {
+					if (!LockManager.isKeyInInvetory(player, lockedDoor.getLockCode())
+							&& !LockManager.isMasterKeyInInvetory(player)) {
 						MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW
 								+ "You need to have correct key in your inventory to destroy this block.");
 						return true;
@@ -82,7 +83,9 @@ public class LockDoor implements ILock {
 
 			if (lockedDoor != null) {
 				if (lockedDoor.isLocked()) {
-					if ((current != null) && (current.getItem() == KeyItems.item_key)) {
+					if ((current != null) && (current.getItem() == KeyItems.item_master_key)) {
+						return false;
+					} else if ((current != null) && (current.getItem() == KeyItems.item_key)) {
 						if (!lockedDoor.getLockCode().getLock().equals(current.getDisplayName())) {
 							world.playSoundAtEntity(player, "fire.ignite", 1.0F, 1.0F);
 							MessageUtil.sendSpecial(player,

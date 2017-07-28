@@ -41,7 +41,8 @@ public class LockContainer implements ILock {
 		if (tileEntity instanceof TileEntityLockable) {
 			TileEntityLockable tileEntityLockable = (TileEntityLockable) tileEntity;
 			if (tileEntityLockable.isLocked()) {
-				if (!LockManager.isKeyInInvetory(player, tileEntityLockable.getLockCode())) {
+				if (!LockManager.isKeyInInvetory(player, tileEntityLockable.getLockCode())
+						&& !LockManager.isMasterKeyInInvetory(player)) {
 					MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW
 							+ "You need to have the correct key in your inventory to destroy this block.");
 					return true;
@@ -59,7 +60,9 @@ public class LockContainer implements ILock {
 			ItemStack current = player.getCurrentEquippedItem();
 
 			if (tileEntityLockable.isLocked()) {
-				if ((current != null) && (current.getItem() == KeyItems.item_key)) {
+				if ((current != null) && (current.getItem() == KeyItems.item_master_key)) {
+					return false;
+				} else if ((current != null) && (current.getItem() == KeyItems.item_key)) {
 					if (!tileEntityLockable.getLockCode().getLock().equals(current.getDisplayName())) {
 						world.playSoundAtEntity(player, "fire.ignite", 1.0F, 1.0F);
 						MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW + "This key does not fit the lock.");

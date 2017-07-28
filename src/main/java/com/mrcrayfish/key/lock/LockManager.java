@@ -80,6 +80,15 @@ public class LockManager {
 		return null;
 	}
 
+	public static boolean isMasterKeyInInvetory(EntityPlayer player) {
+		for (ItemStack stack : player.inventory.mainInventory) {
+			if ((stack != null) && (stack.getItem() == KeyItems.item_master_key)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static boolean onBreak(Block block, TileEntity tileEntity, EntityPlayer player, World world, BlockPos pos) {
 		for (Object object : lockTypes.keySet()) {
 			Class clazz = (Class) object;
