@@ -16,14 +16,16 @@ public class KeyRackRenderer extends TileEntitySpecialRenderer {
 	private EntityItem keyEntity = new EntityItem(Minecraft.getMinecraft().theWorld, 0D, 0D, 0D);
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileEntity, double posX, double posY, double posZ, float p_180535_8_, int p_180535_9_) 
-	{
+	public void renderTileEntityAt(TileEntity tileEntity, double posX, double posY, double posZ, float p_180535_8_,
+			int p_180535_9_) {
 		Block block = tileEntity.getBlockType();
-		if (!(block instanceof BlockKeyRack))
+		if (!(block instanceof BlockKeyRack)) {
 			return;
+		}
 
-		if (tileEntity.getWorld().isAirBlock(tileEntity.getPos()))
+		if (tileEntity.getWorld().isAirBlock(tileEntity.getPos())) {
 			return;
+		}
 
 		int metadata = block.getMetaFromState(tileEntity.getWorld().getBlockState(tileEntity.getPos()));
 
@@ -34,10 +36,9 @@ public class KeyRackRenderer extends TileEntitySpecialRenderer {
 			GlStateManager.translate((float) posX + 0.5F, (float) posY + 0.5F, (float) posZ + 0.5F);
 			GlStateManager.rotate(metadata * -90F, 0, 1, 0);
 			GlStateManager.translate(0.065F, -0.13F, 0.4F);
-			this.keyEntity.hoverStart = 0.0F;
+			keyEntity.hoverStart = 0.0F;
 
-			for (int i = 0; i < keyRack.getSizeInventory(); i++) 
-			{
+			for (int i = 0; i < keyRack.getSizeInventory(); i++) {
 				ItemStack key = keyRack.getStackInSlot(i);
 				if (key != null) {
 					GlStateManager.pushMatrix();
@@ -47,14 +48,11 @@ public class KeyRackRenderer extends TileEntitySpecialRenderer {
 						GlStateManager.rotate(90F, 0, 0, 1);
 						GlStateManager.rotate(180F, 1, 0, 0);
 
-						if (key.getItem() == KeyItems.item_key_ring) 
-						{
+						if (key.getItem() == KeyItems.item_key_ring) {
 							GlStateManager.rotate(-90F, 0, 0, 1);
 							GlStateManager.translate(-0.35F, -0.375F, 0F);
 							GlStateManager.rotate(5F, 0, 1, 0);
-						} 
-						else 
-						{
+						} else {
 							GlStateManager.translate(0F, 0F, -0.025F);
 							GlStateManager.rotate(5F, 1, 0, 0);
 						}

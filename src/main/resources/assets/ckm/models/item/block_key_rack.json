@@ -1,8 +1,5 @@
 {
 	"parent": "ckm:block/key_rack",
-	"textures": {
-		"layer0": "ckm:items/block_key_rack"
-	},
 	"display": {
 		"thirdperson": {
 			"rotation": [ 0, 90, 0 ],
