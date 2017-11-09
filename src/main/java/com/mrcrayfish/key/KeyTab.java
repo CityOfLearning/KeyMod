@@ -4,6 +4,7 @@ import com.mrcrayfish.key.items.KeyItems;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class KeyTab extends CreativeTabs {
 	public KeyTab(String label) {
@@ -11,7 +12,7 @@ public class KeyTab extends CreativeTabs {
 	}
 
 	@Override
-	public Item getTabIconItem() {
-		return KeyItems.item_key;
+	public ItemStack getTabIconItem() {
+		return new ItemStack(KeyItems.item_key);
 	}
 }

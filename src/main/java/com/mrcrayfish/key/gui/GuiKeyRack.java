@@ -27,8 +27,8 @@ public class GuiKeyRack extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		fontRendererObj.drawString(inventoryKeys.getName(), (xSize / 2) - 21, 5, 4210752);
-		fontRendererObj.drawString("Inventory", 8, (ySize - 96) + 2, 4210752);
+		fontRenderer.drawString(inventoryKeys.getName(), (xSize / 2) - 21, 5, 4210752);
+		fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 4210752);
 	}
 
 	@Override

@@ -14,9 +14,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 
@@ -24,7 +24,7 @@ public class LockDoor implements ILock {
 	@Override
 	public BlockPos fix(World world, BlockPos pos) {
 		if ((world.getBlockState(pos).getBlock() instanceof BlockDoor)
-				&& (world.getBlockState(pos).getBlock() != Blocks.iron_door)) {
+				&& (world.getBlockState(pos).getBlock() != Blocks.IRON_DOOR)) {
 			IBlockState state = world.getBlockState(pos);
 			if (state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.UPPER) {
 				return pos.down();
@@ -46,7 +46,7 @@ public class LockDoor implements ILock {
 	@Override
 	public boolean handleBreak(EntityPlayer player, World world, BlockPos pos) {
 		if ((world.getBlockState(pos).getBlock() instanceof BlockDoor)
-				&& (world.getBlockState(pos).getBlock() != Blocks.iron_door)) {
+				&& (world.getBlockState(pos).getBlock() != Blocks.IRON_DOOR)) {
 			IBlockState state = world.getBlockState(pos);
 			if ((state.getValue(BlockDoor.HALF)) == BlockDoor.EnumDoorHalf.UPPER) {
 				pos = pos.down();
@@ -58,7 +58,7 @@ public class LockDoor implements ILock {
 				if (lockedDoor.isLocked()) {
 					if (!LockManager.isKeyInInvetory(player, lockedDoor.getLockCode())
 							&& !LockManager.isMasterKeyInInvetory(player)) {
-						MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW
+						MessageUtil.sendSpecial(player, TextFormatting.YELLOW
 								+ "You need to have correct key in your inventory to destroy this block.");
 						return true;
 					}
@@ -69,9 +69,9 @@ public class LockDoor implements ILock {
 	}
 
 	@Override
-	public boolean handleInteract(EntityPlayer player, World world, BlockPos pos) {
+	public boolean handleInteract(EntityPlayer player, EnumHand hand, World world, BlockPos pos) {
 		if ((world.getBlockState(pos).getBlock() instanceof BlockDoor)
-				&& (world.getBlockState(pos).getBlock() != Blocks.iron_door)) {
+				&& (world.getBlockState(pos).getBlock() != Blocks.IRON_DOOR)) {
 			IBlockState state = world.getBlockState(pos);
 			if ((state.getValue(BlockDoor.HALF)) == BlockDoor.EnumDoorHalf.UPPER) {
 				pos = pos.down();
@@ -79,7 +79,7 @@ public class LockDoor implements ILock {
 
 			WorldLockData worldLockData = WorldLockData.get(world);
 			LockData lockedDoor = worldLockData.getLock(pos);
-			ItemStack current = player.getCurrentEquippedItem();
+			ItemStack current = player.getHeldItem(hand);
 
 			if (lockedDoor != null) {
 				if (lockedDoor.isLocked()) {
@@ -89,7 +89,7 @@ public class LockDoor implements ILock {
 						if (!lockedDoor.getLockCode().getLock().equals(current.getDisplayName())) {
 							world.playSoundAtEntity(player, "fire.ignite", 1.0F, 1.0F);
 							MessageUtil.sendSpecial(player,
-									EnumChatFormatting.YELLOW + "This key does not fit the lock.");
+									TextFormatting.YELLOW + "This key does not fit the lock.");
 							world.markBlockForUpdate(pos);
 							return true;
 						}
@@ -98,7 +98,7 @@ public class LockDoor implements ILock {
 						NBTTagList keys = (NBTTagList) NBTHelper.getCompoundTag(current, "KeyRing").getTag("Keys");
 						if (keys != null) {
 							for (int i = 0; i < keys.tagCount(); i++) {
-								ItemStack key = ItemStack.loadItemStackFromNBT(keys.getCompoundTagAt(i));
+								ItemStack key = new ItemStack(keys.getCompoundTagAt(i));
 								if (lockedDoor.getLockCode().getLock().equals(key.getDisplayName())) {
 									hasCorrectKey = true;
 									break;
@@ -108,13 +108,13 @@ public class LockDoor implements ILock {
 						if (!hasCorrectKey) {
 							world.playSoundAtEntity(player, "fire.ignite", 1.0F, 1.0F);
 							MessageUtil.sendSpecial(player,
-									EnumChatFormatting.YELLOW + "None of the keys fit the lock.");
+									TextFormatting.YELLOW + "None of the keys fit the lock.");
 							world.markBlockForUpdate(pos);
 							return true;
 						}
 					} else {
 						world.playSoundAtEntity(player, "random.wood_click", 1.0F, 1.0F);
-						MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW + "This door is locked with a key.");
+						MessageUtil.sendSpecial(player, TextFormatting.YELLOW + "This door is locked with a key.");
 						world.markBlockForUpdate(pos);
 						return true;
 					}
@@ -125,11 +125,11 @@ public class LockDoor implements ILock {
 							lockedDoor.setLockCode(new LockCode(current.getDisplayName()));
 							world.playSoundAtEntity(player, "random.click", 1.0F, 1.0F);
 							MessageUtil.sendSpecial(player,
-									EnumChatFormatting.GREEN + "Successfully locked the door with the key: "
-											+ EnumChatFormatting.RESET + current.getDisplayName());
+									TextFormatting.GREEN + "Successfully locked the door with the key: "
+											+ TextFormatting.RESET + current.getDisplayName());
 							worldLockData.markDirty();
 						} else {
-							MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW
+							MessageUtil.sendSpecial(player, TextFormatting.YELLOW
 									+ "The key needs to be renamed before you can lock this door.");
 							world.markBlockForUpdate(pos);
 						}
@@ -138,7 +138,7 @@ public class LockDoor implements ILock {
 						}
 					} else if ((current != null) && (current.getItem() == KeyItems.item_key_ring)) {
 						MessageUtil.sendSpecial(player,
-								EnumChatFormatting.YELLOW + "You can only lock a door with a single key.");
+								TextFormatting.YELLOW + "You can only lock a door with a single key.");
 					} else {
 						return false;
 					}

@@ -7,9 +7,9 @@ import com.mrcrayfish.key.MrCrayfishKeyMod;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldSavedData;
+import net.minecraft.world.storage.WorldSavedData;
 
 public class WorldLockData extends WorldSavedData {
 	public static final String IDENTIFIER = "locked_data";
@@ -17,7 +17,7 @@ public class WorldLockData extends WorldSavedData {
 	// TODO: there is probably a better way to check if the data has already
 	// been loaded
 	public static WorldLockData get(World world) {
-		WorldLockData data = (WorldLockData) world.getPerWorldStorage().loadData(WorldLockData.class, IDENTIFIER);
+		WorldLockData data = (WorldLockData) world.getPerWorldStorage().getOrLoadData(WorldLockData.class, IDENTIFIER);
 		if (data == null) {
 			data = new WorldLockData(IDENTIFIER);
 			world.getPerWorldStorage().setData(IDENTIFIER, data);
@@ -79,7 +79,7 @@ public class WorldLockData extends WorldSavedData {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		NBTTagList tagList = new NBTTagList();
 
 		for (LockData lock : lockedData) {
@@ -89,5 +89,6 @@ public class WorldLockData extends WorldSavedData {
 		}
 
 		nbt.setTag("locked_blocks", tagList);
+		return nbt;
 	}
 }

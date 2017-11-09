@@ -8,9 +8,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
 public class TileEntityKeyRack extends TileEntity implements IInventory {
 	private InventoryBasic inventory = new InventoryBasic("Key Rack", true, 4);
@@ -30,15 +30,10 @@ public class TileEntityKeyRack extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound tagCom = new NBTTagCompound();
 		writeToNBT(tagCom);
-		return new S35PacketUpdateTileEntity(pos, getBlockMetadata(), tagCom);
-	}
-
-	@Override
-	public IChatComponent getDisplayName() {
-		return inventory.getDisplayName();
+		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tagCom);
 	}
 
 	@Override
@@ -82,12 +77,12 @@ public class TileEntityKeyRack extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return inventory.isUseableByPlayer(player);
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return inventory.isUsableByPlayer(player);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		NBTTagCompound tagCom = pkt.getNbtCompound();
 		readFromNBT(tagCom);
 	}
@@ -108,7 +103,7 @@ public class TileEntityKeyRack extends TileEntity implements IInventory {
 				byte slot = nbt.getByte("Slot");
 
 				if ((slot >= 0) && (slot < inventory.getSizeInventory())) {
-					inventory.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(nbt));
+					inventory.setInventorySlotContents(slot, new ItemStack(nbt));
 				}
 			}
 		}
@@ -133,7 +128,7 @@ public class TileEntityKeyRack extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
 		NBTTagList tagList = new NBTTagList();
 		for (int slot = 0; slot < inventory.getSizeInventory(); ++slot) {
@@ -149,5 +144,17 @@ public class TileEntityKeyRack extends TileEntity implements IInventory {
 		if (hasCustomName()) {
 			tagCompound.setString("CustomName", inventory.getName());
 		}
+		return tagCompound;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return inventory.getDisplayName();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

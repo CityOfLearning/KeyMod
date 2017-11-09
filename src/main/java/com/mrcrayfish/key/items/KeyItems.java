@@ -4,24 +4,18 @@ import com.mrcrayfish.key.MrCrayfishKeyMod;
 import com.mrcrayfish.key.Reference;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class KeyItems {
 
-	public static Item item_key;
-	public static Item item_master_key;
-	public static Item item_key_ring;
-	public static Item item_iron_nugget;
+	public static final Item item_key= new ItemKey().setUnlocalizedName("item_key").setCreativeTab(MrCrayfishKeyMod.tabKey);
+	public static final Item item_master_key= new ItemMasterKey().setUnlocalizedName("item_master_key");
+	public static final Item item_key_ring= new ItemKeys().setUnlocalizedName("item_key_ring").setCreativeTab(MrCrayfishKeyMod.tabKey);
+	public static final Item item_iron_nugget= new Item().setUnlocalizedName("item_iron_nugget").setCreativeTab(MrCrayfishKeyMod.tabKey);
 
-	public static void register() {
-		item_key = new ItemKey().setUnlocalizedName("item_key").setCreativeTab(MrCrayfishKeyMod.tabKey);
-		item_master_key = new ItemMasterKey().setUnlocalizedName("item_master_key");
-		item_key_ring = new ItemKeys().setUnlocalizedName("item_key_ring").setCreativeTab(MrCrayfishKeyMod.tabKey);
-		item_iron_nugget = new Item().setUnlocalizedName("item_iron_nugget").setCreativeTab(MrCrayfishKeyMod.tabKey);
-	}
 
 	public static void registerItems() {
 		GameRegistry.registerItem(item_key, item_key.getUnlocalizedName().substring(5));

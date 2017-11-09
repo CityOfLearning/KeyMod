@@ -32,7 +32,7 @@ public class ContainerKeys extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
-		return inventoryKeys.isUseableByPlayer(playerIn);
+		return inventoryKeys.isUsableByPlayer(playerIn);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class ContainerKeys extends Container {
 				return null;
 			}
 
-			if (item.stackSize == 0) {
+			if (item.getCount() == 0) {
 				slot.putStack((ItemStack) null);
 			} else {
 				slot.onSlotChanged();

@@ -11,9 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityLockable;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 
@@ -43,7 +43,7 @@ public class LockContainer implements ILock {
 			if (tileEntityLockable.isLocked()) {
 				if (!LockManager.isKeyInInvetory(player, tileEntityLockable.getLockCode())
 						&& !LockManager.isMasterKeyInInvetory(player)) {
-					MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW
+					MessageUtil.sendSpecial(player, TextFormatting.YELLOW
 							+ "You need to have the correct key in your inventory to destroy this block.");
 					return true;
 				}
@@ -53,11 +53,11 @@ public class LockContainer implements ILock {
 	}
 
 	@Override
-	public boolean handleInteract(EntityPlayer player, World world, BlockPos pos) {
+	public boolean handleInteract(EntityPlayer player, EnumHand hand, World world, BlockPos pos) {
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if (tileEntity instanceof TileEntityLockable) {
 			TileEntityLockable tileEntityLockable = (TileEntityLockable) tileEntity;
-			ItemStack current = player.getCurrentEquippedItem();
+			ItemStack current = player.getHeldItem(hand);
 
 			if (tileEntityLockable.isLocked()) {
 				if ((current != null) && (current.getItem() == KeyItems.item_master_key)) {
@@ -65,7 +65,7 @@ public class LockContainer implements ILock {
 				} else if ((current != null) && (current.getItem() == KeyItems.item_key)) {
 					if (!tileEntityLockable.getLockCode().getLock().equals(current.getDisplayName())) {
 						world.playSoundAtEntity(player, "fire.ignite", 1.0F, 1.0F);
-						MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW + "This key does not fit the lock.");
+						MessageUtil.sendSpecial(player, TextFormatting.YELLOW + "This key does not fit the lock.");
 						return true;
 					}
 				} else if ((current != null) && (current.getItem() == KeyItems.item_key_ring)) {
@@ -73,7 +73,7 @@ public class LockContainer implements ILock {
 					NBTTagList keys = (NBTTagList) NBTHelper.getCompoundTag(current, "KeyRing").getTag("Keys");
 					if (keys != null) {
 						for (int i = 0; i < keys.tagCount(); i++) {
-							ItemStack key = ItemStack.loadItemStackFromNBT(keys.getCompoundTagAt(i));
+							ItemStack key = new ItemStack(keys.getCompoundTagAt(i));
 							if (tileEntityLockable.getLockCode().getLock().equals(key.getDisplayName())) {
 								current.setStackDisplayName(key.getDisplayName());
 								hasCorrectKey = true;
@@ -83,13 +83,13 @@ public class LockContainer implements ILock {
 					}
 					if (!hasCorrectKey) {
 						world.playSoundAtEntity(player, "fire.ignite", 1.0F, 1.0F);
-						MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW + "None of the keys fit the lock.");
+						MessageUtil.sendSpecial(player, TextFormatting.YELLOW + "None of the keys fit the lock.");
 						return true;
 					}
 				} else {
 					if (!world.isRemote) {
 						world.playSoundAtEntity(player, "random.wood_click", 1.0F, 1.0F);
-						MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW + "This block is locked with a key.");
+						MessageUtil.sendSpecial(player, TextFormatting.YELLOW + "This block is locked with a key.");
 						return true;
 					}
 				}
@@ -101,12 +101,12 @@ public class LockContainer implements ILock {
 							tileEntityLockable.setLockCode(new LockCode(current.getDisplayName()));
 							world.playSoundAtEntity(player, "random.click", 1.0F, 1.0F);
 							MessageUtil.sendSpecial(player,
-									EnumChatFormatting.GREEN + "Successfully locked the block with the key: "
-											+ EnumChatFormatting.RESET + current.getDisplayName());
+									TextFormatting.GREEN + "Successfully locked the block with the key: "
+											+ TextFormatting.RESET + current.getDisplayName());
 							return true;
 						}
 					} else {
-						MessageUtil.sendSpecial(player, EnumChatFormatting.YELLOW
+						MessageUtil.sendSpecial(player, TextFormatting.YELLOW
 								+ "The key needs to be renamed before you can lock this block.");
 					}
 				}

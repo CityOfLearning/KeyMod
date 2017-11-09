@@ -15,7 +15,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityLockable;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 
@@ -44,7 +45,7 @@ public class LockManager {
 				NBTTagList keys = (NBTTagList) NBTHelper.getCompoundTag(stack, "KeyRing").getTag("Keys");
 				if (keys != null) {
 					for (int i = 0; i < keys.tagCount(); i++) {
-						ItemStack key = ItemStack.loadItemStackFromNBT(keys.getCompoundTagAt(i));
+						ItemStack key = new ItemStack(keys.getCompoundTagAt(i));
 						if (code.getLock().equals(key.getDisplayName())) {
 							return true;
 						}
@@ -99,12 +100,12 @@ public class LockManager {
 		return false;
 	}
 
-	public static boolean onInteract(Block block, TileEntity tileEntity, EntityPlayer player, World world,
-			BlockPos pos) {
+	public static boolean onInteract(Block block, TileEntity tileEntity, EntityPlayer player, EnumHand hand,
+			World world, BlockPos pos) {
 		for (Object object : lockTypes.keySet()) {
 			Class clazz = (Class) object;
 			if (clazz.isInstance(block) || clazz.isInstance(tileEntity)) {
-				return lockTypes.get(object).handleInteract(player, world, pos);
+				return lockTypes.get(object).handleInteract(player, hand, world, pos);
 			}
 		}
 		return false;

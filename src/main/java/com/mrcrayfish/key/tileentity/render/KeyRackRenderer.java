@@ -11,13 +11,12 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBanner;
 
 public class KeyRackRenderer extends TileEntitySpecialRenderer {
-	private EntityItem keyEntity = new EntityItem(Minecraft.getMinecraft().theWorld, 0D, 0D, 0D);
+	private EntityItem keyEntity = new EntityItem(Minecraft.getMinecraft().world, 0D, 0D, 0D);
 
-	@Override
-	public void renderTileEntityAt(TileEntity tileEntity, double posX, double posY, double posZ, float p_180535_8_,
-			int p_180535_9_) {
+	public void render(TileEntityKeyRack tileEntity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		Block block = tileEntity.getBlockType();
 		if (!(block instanceof BlockKeyRack)) {
 			return;
@@ -33,7 +32,7 @@ public class KeyRackRenderer extends TileEntitySpecialRenderer {
 
 		GlStateManager.pushMatrix();
 		{
-			GlStateManager.translate((float) posX + 0.5F, (float) posY + 0.5F, (float) posZ + 0.5F);
+			GlStateManager.translate((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
 			GlStateManager.rotate(metadata * -90F, 0, 1, 0);
 			GlStateManager.translate(0.065F, -0.13F, 0.4F);
 			keyEntity.hoverStart = 0.0F;
@@ -43,7 +42,7 @@ public class KeyRackRenderer extends TileEntitySpecialRenderer {
 				if (key != null) {
 					GlStateManager.pushMatrix();
 					{
-						keyEntity.setEntityItemStack(key);
+						keyEntity.setItem(key);
 						GlStateManager.scale(0.75F, 0.75F, 0.75F);
 						GlStateManager.rotate(90F, 0, 0, 1);
 						GlStateManager.rotate(180F, 1, 0, 0);
@@ -57,7 +56,7 @@ public class KeyRackRenderer extends TileEntitySpecialRenderer {
 							GlStateManager.rotate(5F, 1, 0, 0);
 						}
 
-						Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(keyEntity, 0, 0, 0, 0, 0);
+						Minecraft.getMinecraft().getRenderManager().doRenderEntity(keyEntity, 0, 0, 0, 0, 0, false);
 					}
 					GlStateManager.popMatrix();
 				}

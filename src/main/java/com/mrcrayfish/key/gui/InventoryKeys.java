@@ -84,7 +84,7 @@ public class InventoryKeys extends InventoryBasic {
 				int slot = tagCompound.getByte("Slot") & 0xff;
 
 				if ((slot >= 0) && (slot < getSizeInventory())) {
-					setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(tagCompound));
+					setInventorySlotContents(slot, new ItemStack(tagCompound));
 				}
 			}
 		}

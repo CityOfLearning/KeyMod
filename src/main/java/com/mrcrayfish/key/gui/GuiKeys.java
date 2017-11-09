@@ -34,11 +34,11 @@ public class GuiKeys extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 		if ((player.inventory.getCurrentItem() == null) | ((player.inventory.getCurrentItem() != null)
 				&& (player.inventory.getCurrentItem().getItem() != KeyItems.item_key_ring))) {
-			mc.thePlayer.closeScreen();
+			mc.player.closeScreen();
 		}
 
-		fontRendererObj.drawString("Key Ring", (xSize / 2) - 21, 5, 4210752);
-		fontRendererObj.drawString("Inventory", 8, (ySize - 96) + 2, 4210752);
+		fontRenderer.drawString("Key Ring", (xSize / 2) - 21, 5, 4210752);
+		fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 4210752);
 	}
 
 	@Override
