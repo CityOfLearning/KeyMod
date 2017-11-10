@@ -1,52 +1,45 @@
 package com.mrcrayfish.key.blocks;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 
 import com.mrcrayfish.key.MrCrayfishKeyMod;
+import com.mrcrayfish.key.Reference;
 import com.mrcrayfish.key.gui.GuiKeyRack;
 import com.mrcrayfish.key.tileentity.TileEntityKeyRack;
-import com.mrcrayfish.key.util.CollisionHelper;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockKeyRack extends BlockDirectional implements ITileEntityProvider {
+public class BlockKeyRack extends BlockHorizontal implements ITileEntityProvider {
 	public BlockKeyRack(Material materialIn) {
 		super(materialIn);
 		blockSoundType = SoundType.WOOD;
 		setHardness(0.5F);
 		setCreativeTab(MrCrayfishKeyMod.tabKey);
-		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, "block_key_rack"));
+		setUnlocalizedName("block_key_rack");
+		setDefaultState(blockState.getBaseState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH));
 		isBlockContainer = true;
-	}
-
-	@Override
-    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_)
-    {
-		int meta = getMetaFromState(state);
-		CollisionHelper.setBlockBounds(this, meta, 0.8F, 0.2F, 0F, 1F, 0.8F, 1F);
-		super.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn, p_185477_7_);
 	}
 
 	@Override
@@ -68,7 +61,7 @@ public class BlockKeyRack extends BlockDirectional implements ITileEntityProvide
 	}
 
 	private boolean canPlaceCheck(World world, BlockPos pos, IBlockState state) {
-		EnumFacing enumfacing = state.getValue(FACING);
+		EnumFacing enumfacing = state.getValue(BlockHorizontal.FACING);
 		if (!canPlaceBlockOnSide(world, pos, enumfacing)) {
 			dropBlockAsItem(world, pos, state, 0);
 			world.setBlockToAir(pos);
@@ -80,7 +73,7 @@ public class BlockKeyRack extends BlockDirectional implements ITileEntityProvide
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { FACING });
+		return new BlockStateContainer(this, new IProperty[] { BlockHorizontal.FACING });
 	}
 
 	@Override
@@ -89,13 +82,63 @@ public class BlockKeyRack extends BlockDirectional implements ITileEntityProvide
 	}
 
 	@Override
+	public boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int id, int param) {
+		super.eventReceived(state, worldIn, pos, id, param);
+		TileEntity tileentity = worldIn.getTileEntity(pos);
+		return tileentity == null ? false : tileentity.receiveClientEvent(id, param);
+	}
+
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		EnumFacing enumfacing = state.getValue(BlockHorizontal.FACING);
+		float f = 0.28125F;
+		float f1 = 0.78125F;
+		float f2 = 0.0F;
+		float f3 = 1.0F;
+		float f4 = 0.125F;
+
+		switch (enumfacing) {
+		case NORTH:
+			return new AxisAlignedBB(f2, f, 1.0F - f4, f3, f1, 1.0F);
+		case SOUTH:
+			return new AxisAlignedBB(f2, f, 0.0F, f3, f1, f4);
+		case WEST:
+			return new AxisAlignedBB(1.0F - f4, f, f2, 1.0F, f1, f3);
+		case EAST:
+			return new AxisAlignedBB(0.0F, f, f2, f4, f1, f3);
+		default:
+			return new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+		}
+	}
+
+	@Override
+	@Nullable
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+		return Block.NULL_AABB;
+	}
+
+	public Item getItemBlock() {
+		return new ItemBlock(this).setRegistryName(getRegistryName());
+	}
+
+	@Override
 	public int getMetaFromState(IBlockState state) {
-		return state.getValue(FACING).getHorizontalIndex();
+		return state.getValue(BlockHorizontal.FACING).getHorizontalIndex();
+	}
+
+	/**
+	 * Called by ItemBlocks just before a block is actually set in the world, to
+	 * allow for adjustments to the IBlockstate
+	 */
+	@Override
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY,
+			float hitZ, int meta, EntityLivingBase placer) {
+		return getDefaultState().withProperty(BlockHorizontal.FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
+		return getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.getHorizontal(meta));
 	}
 
 	@Override
@@ -109,8 +152,8 @@ public class BlockKeyRack extends BlockDirectional implements ITileEntityProvide
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			TileEntity tileEntity = worldIn.getTileEntity(pos);
 			if (tileEntity instanceof TileEntityKeyRack) {
@@ -121,23 +164,10 @@ public class BlockKeyRack extends BlockDirectional implements ITileEntityProvide
 	}
 
 	@Override
-	public boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int id, int param) {
-		super.eventReceived(state,worldIn, pos,  id, param);
-		TileEntity tileentity = worldIn.getTileEntity(pos);
-		return tileentity == null ? false : tileentity.receiveClientEvent(id, param);
-	}
-
-	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
-		state.withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-	}
-
-	@Override
-	 public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
 		IBlockState state = world.getBlockState(pos);
 		if (canPlaceCheck((World) world, pos, state)) {
-			EnumFacing enumfacing = state.getValue(FACING);
+			EnumFacing enumfacing = state.getValue(BlockHorizontal.FACING);
 
 			if (!world.getBlockState(pos.offset(enumfacing)).getBlock().isNormalCube(state)) {
 				breakBlock((World) world, pos, state);
@@ -145,11 +175,5 @@ public class BlockKeyRack extends BlockDirectional implements ITileEntityProvide
 				((World) world).setBlockToAir(pos);
 			}
 		}
-	}
-
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos) {
-		int meta = getMetaFromState(worldIn.getBlockState(pos));
-		CollisionHelper.setBlockBounds(this, meta, 0.8F, 0.2F, 0F, 1F, 0.8F, 1F);
 	}
 }

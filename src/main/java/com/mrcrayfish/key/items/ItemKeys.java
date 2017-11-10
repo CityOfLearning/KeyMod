@@ -25,13 +25,13 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityLockable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 
@@ -50,7 +50,7 @@ public class ItemKeys extends Item {
 	}
 
 	@Override
-	 public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		NBTTagCompound container = NBTHelper.getCompoundTag(stack, "KeyRing");
 		if (container.hasKey("Keys")) {
 			NBTTagList keys = (NBTTagList) container.getTag("Keys");
@@ -58,7 +58,9 @@ public class ItemKeys extends Item {
 				tooltip.add(TextFormatting.GOLD.toString() + "Keys:");
 				for (int i = 0; i < keys.tagCount(); i++) {
 					ItemStack key = new ItemStack(keys.getCompoundTagAt(i));
-					tooltip.add("- " + key.getDisplayName());
+					if ((key != ItemStack.EMPTY) && (key.getItem() == MrCrayfishKeyMod.item_key)) {
+						tooltip.add("- " + key.getDisplayName());
+					}
 				}
 			}
 		}
@@ -68,7 +70,13 @@ public class ItemKeys extends Item {
 	public String getItemStackDisplayName(ItemStack stack) {
 		NBTTagList tagList = (NBTTagList) NBTHelper.getCompoundTag(stack, "KeyRing").getTag("Keys");
 		if (tagList != null) {
-			int keys = tagList.tagCount();
+			int keys = 0;
+			for (int i = 0; i < tagList.tagCount(); i++) {
+				ItemStack key = new ItemStack(tagList.getCompoundTagAt(i));
+				if ((key != ItemStack.EMPTY) && (key.getItem() == MrCrayfishKeyMod.item_key)) {
+					keys++;
+				}
+			}
 			if (keys > 0) {
 				return super.getItemStackDisplayName(stack) + TextFormatting.YELLOW + " (" + keys + " "
 						+ (keys > 1 ? "Keys" : "Key") + ")";
@@ -83,7 +91,14 @@ public class ItemKeys extends Item {
 		if (tagList == null) {
 			return 0;
 		}
-		return (tagList.tagCount() + 1) / 2;
+		int retVal = 0;
+		for (int i = 0; i < tagList.tagCount(); i++) {
+			ItemStack key = new ItemStack(tagList.getCompoundTagAt(i));
+			if ((key != ItemStack.EMPTY) && (key.getItem() == MrCrayfishKeyMod.item_key)) {
+				retVal++;
+			}
+		}
+		return (retVal + 1) / 2;
 	}
 
 	@Override
@@ -101,12 +116,12 @@ public class ItemKeys extends Item {
 		if (!worldIn.isRemote) {
 			playerIn.openGui(MrCrayfishKeyMod.instance, GuiKeys.ID, worldIn, 0, 0, 0);
 		}
-		return new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
+		return new ActionResult<>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
 	}
 
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
+	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand,
+			EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			if (player.isSneaking()) {
 				EntityPlayerMP playerMp = (EntityPlayerMP) player;
@@ -115,7 +130,8 @@ public class ItemKeys extends Item {
 					TileEntityLockable tileEntityLockable = (TileEntityLockable) tileEntity;
 					if (tileEntityLockable.isLocked()) {
 						boolean hasCorrectKey = false;
-						NBTTagList keys = (NBTTagList) NBTHelper.getCompoundTag(player.getHeldItem(hand), "KeyRing").getTag("Keys");
+						NBTTagList keys = (NBTTagList) NBTHelper.getCompoundTag(player.getHeldItem(hand), "KeyRing")
+								.getTag("Keys");
 						if (keys != null) {
 							for (int i = 0; i < keys.tagCount(); i++) {
 								ItemStack key = new ItemStack(keys.getCompoundTagAt(i));
@@ -127,15 +143,11 @@ public class ItemKeys extends Item {
 						}
 						if (hasCorrectKey) {
 							tileEntityLockable.setLockCode(LockCode.EMPTY_CODE);
-							playerMp.connection
-									.sendPacket(new SPacketChat(
-											(new TextComponentString(
-													TextFormatting.GREEN + "Succesfully unlocked this block."))));
+							playerMp.connection.sendPacket(new SPacketChat((new TextComponentString(
+									TextFormatting.GREEN + "Succesfully unlocked this block."))));
 						} else {
-							playerMp.connection
-									.sendPacket(new SPacketChat(
-											(new TextComponentString(TextFormatting.YELLOW
-													+ "You need to have correct key to unlock this block."))));
+							playerMp.connection.sendPacket(new SPacketChat((new TextComponentString(
+									TextFormatting.YELLOW + "You need to have correct key to unlock this block."))));
 						}
 					}
 					return EnumActionResult.PASS;
@@ -152,7 +164,8 @@ public class ItemKeys extends Item {
 					if (lockedDoor != null) {
 						if (lockedDoor.isLocked()) {
 							boolean hasCorrectKey = false;
-							NBTTagList keys = (NBTTagList) NBTHelper.getCompoundTag(player.getHeldItem(hand), "KeyRing").getTag("Keys");
+							NBTTagList keys = (NBTTagList) NBTHelper.getCompoundTag(player.getHeldItem(hand), "KeyRing")
+									.getTag("Keys");
 							if (keys != null) {
 								for (int i = 0; i < keys.tagCount(); i++) {
 									ItemStack key = new ItemStack(keys.getCompoundTagAt(i));
@@ -163,15 +176,13 @@ public class ItemKeys extends Item {
 							}
 							if (hasCorrectKey) {
 								lockedDoor.setLockCode(LockCode.EMPTY_CODE);
-								playerMp.connection.sendPacket(new SPacketChat(
-										(new TextComponentString(
-												TextFormatting.GREEN + "Succesfully unlocked this block."))));
+								playerMp.connection.sendPacket(new SPacketChat((new TextComponentString(
+										TextFormatting.GREEN + "Succesfully unlocked this block."))));
 								lockedDoorData.markDirty();
 							} else {
 								playerMp.connection
-										.sendPacket(new SPacketChat(
-												(new TextComponentString(TextFormatting.YELLOW
-														+ "You need to have correct key to unlock this block."))));
+										.sendPacket(new SPacketChat((new TextComponentString(TextFormatting.YELLOW
+												+ "You need to have correct key to unlock this block."))));
 							}
 						}
 					}

@@ -2,7 +2,7 @@ package com.mrcrayfish.key.gui;
 
 import java.util.UUID;
 
-import com.mrcrayfish.key.items.KeyItems;
+import com.mrcrayfish.key.MrCrayfishKeyMod;
 import com.mrcrayfish.key.util.NBTHelper;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,7 @@ public class InventoryKeys extends InventoryBasic {
 	private String uniqueId = "";
 
 	public InventoryKeys(EntityPlayer player, ItemStack keys) {
-		super("KeyRing", false, getInventorySize());
+		super("KeyRing", false, InventoryKeys.getInventorySize());
 		this.player = player;
 		this.keys = keys;
 		if (!hasInventory()) {
@@ -98,7 +98,7 @@ public class InventoryKeys extends InventoryBasic {
 
 	protected void setNBT() {
 		for (ItemStack itemStack : player.inventory.mainInventory) {
-			if ((itemStack != null) && (itemStack.getItem() == KeyItems.item_key_ring)) {
+			if ((itemStack != null) && (itemStack.getItem() == MrCrayfishKeyMod.item_key_ring)) {
 				NBTTagCompound nbt = itemStack.getTagCompound();
 				if (nbt != null) {
 					if (nbt.getCompoundTag("KeyRing").getString("UniqueID").equals(uniqueId)) {

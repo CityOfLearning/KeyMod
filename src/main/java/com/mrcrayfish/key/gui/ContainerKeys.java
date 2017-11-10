@@ -43,7 +43,7 @@ public class ContainerKeys extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotNum) {
-		ItemStack itemCopy = null;
+		ItemStack itemCopy = ItemStack.EMPTY;
 		Slot slot = inventorySlots.get(slotNum);
 
 		if ((slot != null) && slot.getHasStack()) {
@@ -52,14 +52,14 @@ public class ContainerKeys extends Container {
 
 			if (slotNum < 6) {
 				if (!mergeItemStack(item, 6, inventorySlots.size(), true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 			} else if (!mergeItemStack(item, 0, 6, false)) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 			if (item.getCount() == 0) {
-				slot.putStack((ItemStack) null);
+				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}

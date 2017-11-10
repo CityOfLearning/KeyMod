@@ -1,6 +1,6 @@
 package com.mrcrayfish.key.lock.type;
 
-import com.mrcrayfish.key.items.KeyItems;
+import com.mrcrayfish.key.MrCrayfishKeyMod;
 import com.mrcrayfish.key.lock.ILock;
 import com.mrcrayfish.key.lock.LockData;
 import com.mrcrayfish.key.lock.LockManager;
@@ -12,11 +12,14 @@ import net.minecraft.block.BlockDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 
@@ -83,17 +86,17 @@ public class LockDoor implements ILock {
 
 			if (lockedDoor != null) {
 				if (lockedDoor.isLocked()) {
-					if ((current != null) && (current.getItem() == KeyItems.item_master_key)) {
+					if ((current != null) && (current.getItem() == MrCrayfishKeyMod.item_master_key)) {
 						return false;
-					} else if ((current != null) && (current.getItem() == KeyItems.item_key)) {
+					} else if ((current != null) && (current.getItem() == MrCrayfishKeyMod.item_key)) {
 						if (!lockedDoor.getLockCode().getLock().equals(current.getDisplayName())) {
-							world.playSoundAtEntity(player, "fire.ignite", 1.0F, 1.0F);
-							MessageUtil.sendSpecial(player,
-									TextFormatting.YELLOW + "This key does not fit the lock.");
-							world.markBlockForUpdate(pos);
+							world.playSound(player, player.getPosition(), SoundEvents.ITEM_FLINTANDSTEEL_USE,
+									SoundCategory.BLOCKS, 1.0F, 1.0F);
+							MessageUtil.sendSpecial(player, TextFormatting.YELLOW + "This key does not fit the lock.");
+							world.notifyBlockUpdate(pos, state, state, 3);
 							return true;
 						}
-					} else if ((current != null) && (current.getItem() == KeyItems.item_key_ring)) {
+					} else if ((current != null) && (current.getItem() == MrCrayfishKeyMod.item_key_ring)) {
 						boolean hasCorrectKey = false;
 						NBTTagList keys = (NBTTagList) NBTHelper.getCompoundTag(current, "KeyRing").getTag("Keys");
 						if (keys != null) {
@@ -106,24 +109,26 @@ public class LockDoor implements ILock {
 							}
 						}
 						if (!hasCorrectKey) {
-							world.playSoundAtEntity(player, "fire.ignite", 1.0F, 1.0F);
-							MessageUtil.sendSpecial(player,
-									TextFormatting.YELLOW + "None of the keys fit the lock.");
-							world.markBlockForUpdate(pos);
+							world.playSound(player, player.getPosition(), SoundEvents.ITEM_FLINTANDSTEEL_USE,
+									SoundCategory.BLOCKS, 1.0F, 1.0F);
+							MessageUtil.sendSpecial(player, TextFormatting.YELLOW + "None of the keys fit the lock.");
+							world.notifyBlockUpdate(pos, state, state, 3);
 							return true;
 						}
 					} else {
-						world.playSoundAtEntity(player, "random.wood_click", 1.0F, 1.0F);
+						world.playSound(player, player.getPosition(), SoundEvents.BLOCK_WOOD_BUTTON_CLICK_ON,
+								SoundCategory.BLOCKS, 1.0F, 1.0F);
 						MessageUtil.sendSpecial(player, TextFormatting.YELLOW + "This door is locked with a key.");
-						world.markBlockForUpdate(pos);
+						world.notifyBlockUpdate(pos, state, state, 3);
 						return true;
 					}
 				} else {
-					if ((current != null) && (current.getItem() == KeyItems.item_key)) {
-						if (!current.getDisplayName().equals(
-								StatCollector.translateToLocal(current.getItem().getUnlocalizedName() + ".name"))) {
+					if ((current != null) && (current.getItem() == MrCrayfishKeyMod.item_key)) {
+						if (!current.getDisplayName()
+								.equals(I18n.translateToLocal(current.getItem().getUnlocalizedName() + ".name"))) {
 							lockedDoor.setLockCode(new LockCode(current.getDisplayName()));
-							world.playSoundAtEntity(player, "random.click", 1.0F, 1.0F);
+							world.playSound(player, player.getPosition(), SoundEvents.BLOCK_COMPARATOR_CLICK,
+									SoundCategory.BLOCKS, 1.0F, 1.0F);
 							MessageUtil.sendSpecial(player,
 									TextFormatting.GREEN + "Successfully locked the door with the key: "
 											+ TextFormatting.RESET + current.getDisplayName());
@@ -131,12 +136,12 @@ public class LockDoor implements ILock {
 						} else {
 							MessageUtil.sendSpecial(player, TextFormatting.YELLOW
 									+ "The key needs to be renamed before you can lock this door.");
-							world.markBlockForUpdate(pos);
+							world.notifyBlockUpdate(pos, state, state, 3);
 						}
 						if (!world.isRemote) {
 							return true;
 						}
-					} else if ((current != null) && (current.getItem() == KeyItems.item_key_ring)) {
+					} else if ((current != null) && (current.getItem() == MrCrayfishKeyMod.item_key_ring)) {
 						MessageUtil.sendSpecial(player,
 								TextFormatting.YELLOW + "You can only lock a door with a single key.");
 					} else {

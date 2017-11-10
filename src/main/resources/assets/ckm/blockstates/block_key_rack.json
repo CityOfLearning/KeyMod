@@ -1,8 +1,18 @@
 {
-    "variants": {
-        "facing=north": {"model": "ckm:key_rack"},
-        "facing=south": { "model": "ckm:key_rack", "y": 180},
-        "facing=east":  { "model": "ckm:key_rack", "y": 90},
-        "facing=west":  { "model": "ckm:key_rack", "y": 270}
-    }
+	"variants": {
+		"facing=north": {
+			"model": "ckm:block_key_rack", "y": 180
+		},
+		"facing=south": {
+			"model": "ckm:block_key_rack"
+		},
+		"facing=east": {
+			"model": "ckm:block_key_rack",
+			"y": 270
+		},
+		"facing=west": {
+			"model": "ckm:block_key_rack",
+			"y": 90
+		}
+	}
 }

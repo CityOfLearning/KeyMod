@@ -1,6 +1,6 @@
 package com.mrcrayfish.key.gui;
 
-import com.mrcrayfish.key.items.KeyItems;
+import com.mrcrayfish.key.MrCrayfishKeyMod;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -24,7 +24,7 @@ public class GuiKeys extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.getTextureManager().bindTexture(gui);
+		mc.getTextureManager().bindTexture(GuiKeys.gui);
 		int l = (width - xSize) / 2;
 		int i1 = (height - ySize) / 2;
 		this.drawTexturedModalRect(l, i1, 0, 0, xSize, ySize);
@@ -33,7 +33,7 @@ public class GuiKeys extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 		if ((player.inventory.getCurrentItem() == null) | ((player.inventory.getCurrentItem() != null)
-				&& (player.inventory.getCurrentItem().getItem() != KeyItems.item_key_ring))) {
+				&& (player.inventory.getCurrentItem().getItem() != MrCrayfishKeyMod.item_key_ring))) {
 			mc.player.closeScreen();
 		}
 

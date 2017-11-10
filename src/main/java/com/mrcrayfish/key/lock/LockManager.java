@@ -3,7 +3,7 @@ package com.mrcrayfish.key.lock;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mrcrayfish.key.items.KeyItems;
+import com.mrcrayfish.key.MrCrayfishKeyMod;
 import com.mrcrayfish.key.lock.type.LockContainer;
 import com.mrcrayfish.key.lock.type.LockDoor;
 import com.mrcrayfish.key.util.NBTHelper;
@@ -21,15 +21,15 @@ import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 
 public class LockManager {
-	private static Map<Object, ILock> lockTypes = new HashMap<Object, ILock>();
+	private static Map<Object, ILock> lockTypes = new HashMap<>();
 
 	public static BlockPos fix(World world, BlockPos pos) {
 		Block block = world.getBlockState(pos).getBlock();
 		TileEntity tileEntity = world.getTileEntity(pos);
-		for (Object object : lockTypes.keySet()) {
+		for (Object object : LockManager.lockTypes.keySet()) {
 			Class clazz = (Class) object;
 			if (clazz.isInstance(block) | clazz.isInstance(tileEntity)) {
-				return lockTypes.get(object).fix(world, pos);
+				return LockManager.lockTypes.get(object).fix(world, pos);
 			}
 		}
 		return pos;
@@ -37,11 +37,11 @@ public class LockManager {
 
 	public static boolean isKeyInInvetory(EntityPlayer player, LockCode code) {
 		for (ItemStack stack : player.inventory.mainInventory) {
-			if ((stack != null) && (stack.getItem() == KeyItems.item_key)) {
+			if ((stack != null) && (stack.getItem() == MrCrayfishKeyMod.item_key)) {
 				if (code.getLock().equals(stack.getDisplayName())) {
 					return true;
 				}
-			} else if ((stack != null) && (stack.getItem() == KeyItems.item_key_ring)) {
+			} else if ((stack != null) && (stack.getItem() == MrCrayfishKeyMod.item_key_ring)) {
 				NBTTagList keys = (NBTTagList) NBTHelper.getCompoundTag(stack, "KeyRing").getTag("Keys");
 				if (keys != null) {
 					for (int i = 0; i < keys.tagCount(); i++) {
@@ -71,7 +71,7 @@ public class LockManager {
 					} else {
 						LockData lock = worldLockData.getLock(checkPos);
 						if (lock != null) {
-							checkPos = fix(world, checkPos);
+							checkPos = LockManager.fix(world, checkPos);
 							return checkPos;
 						}
 					}
@@ -83,7 +83,7 @@ public class LockManager {
 
 	public static boolean isMasterKeyInInvetory(EntityPlayer player) {
 		for (ItemStack stack : player.inventory.mainInventory) {
-			if ((stack != null) && (stack.getItem() == KeyItems.item_master_key)) {
+			if ((stack != null) && (stack.getItem() == MrCrayfishKeyMod.item_master_key)) {
 				return true;
 			}
 		}
@@ -91,10 +91,10 @@ public class LockManager {
 	}
 
 	public static boolean onBreak(Block block, TileEntity tileEntity, EntityPlayer player, World world, BlockPos pos) {
-		for (Object object : lockTypes.keySet()) {
+		for (Object object : LockManager.lockTypes.keySet()) {
 			Class clazz = (Class) object;
 			if (clazz.isInstance(block) || clazz.isInstance(tileEntity)) {
-				return lockTypes.get(object).handleBreak(player, world, pos);
+				return LockManager.lockTypes.get(object).handleBreak(player, world, pos);
 			}
 		}
 		return false;
@@ -102,21 +102,21 @@ public class LockManager {
 
 	public static boolean onInteract(Block block, TileEntity tileEntity, EntityPlayer player, EnumHand hand,
 			World world, BlockPos pos) {
-		for (Object object : lockTypes.keySet()) {
+		for (Object object : LockManager.lockTypes.keySet()) {
 			Class clazz = (Class) object;
 			if (clazz.isInstance(block) || clazz.isInstance(tileEntity)) {
-				return lockTypes.get(object).handleInteract(player, hand, world, pos);
+				return LockManager.lockTypes.get(object).handleInteract(player, hand, world, pos);
 			}
 		}
 		return false;
 	}
 
 	public static void registerLock(Class clazz, ILock lock) {
-		lockTypes.put(clazz, lock);
+		LockManager.lockTypes.put(clazz, lock);
 	}
 
 	public static void registerTypes() {
-		lockTypes.put(TileEntityLockable.class, new LockContainer());
-		lockTypes.put(BlockDoor.class, new LockDoor());
+		LockManager.lockTypes.put(TileEntityLockable.class, new LockContainer());
+		LockManager.lockTypes.put(BlockDoor.class, new LockDoor());
 	}
 }

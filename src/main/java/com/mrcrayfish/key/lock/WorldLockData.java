@@ -17,23 +17,24 @@ public class WorldLockData extends WorldSavedData {
 	// TODO: there is probably a better way to check if the data has already
 	// been loaded
 	public static WorldLockData get(World world) {
-		WorldLockData data = (WorldLockData) world.getPerWorldStorage().getOrLoadData(WorldLockData.class, IDENTIFIER);
+		WorldLockData data = (WorldLockData) world.getPerWorldStorage().getOrLoadData(WorldLockData.class,
+				WorldLockData.IDENTIFIER);
 		if (data == null) {
-			data = new WorldLockData(IDENTIFIER);
-			world.getPerWorldStorage().setData(IDENTIFIER, data);
+			data = new WorldLockData(WorldLockData.IDENTIFIER);
+			world.getPerWorldStorage().setData(WorldLockData.IDENTIFIER, data);
 		}
 		return data;
 	}
 
-	private List<LockData> lockedData = new ArrayList<LockData>();
+	private List<LockData> lockedData = new ArrayList<>();
 
 	public WorldLockData() {
-		this(IDENTIFIER);
+		this(WorldLockData.IDENTIFIER);
 	}
 
 	public WorldLockData(String identifier) {
 		super(identifier);
-		if (identifier != IDENTIFIER) {
+		if (identifier != WorldLockData.IDENTIFIER) {
 			MrCrayfishKeyMod.logger.error("Uh oh... the identifiers dont match, its likely that locks will not work");
 		}
 	}

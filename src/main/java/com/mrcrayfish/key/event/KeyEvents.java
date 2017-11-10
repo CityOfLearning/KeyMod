@@ -1,6 +1,6 @@
 package com.mrcrayfish.key.event;
 
-import com.mrcrayfish.key.items.KeyItems;
+import com.mrcrayfish.key.MrCrayfishKeyMod;
 import com.mrcrayfish.key.lock.LockData;
 import com.mrcrayfish.key.lock.LockManager;
 import com.mrcrayfish.key.lock.WorldLockData;
@@ -69,7 +69,7 @@ public class KeyEvents {
 	public void onOpenContainer(PlayerContainerEvent event) {
 		ItemStack current = event.getEntityPlayer().getHeldItemMainhand();
 		if (current != null) {
-			if (current.getItem() == KeyItems.item_key_ring) {
+			if (current.getItem() == MrCrayfishKeyMod.item_key_ring) {
 				current.clearCustomName();
 			}
 		}
@@ -94,8 +94,8 @@ public class KeyEvents {
 			Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
 			TileEntity tileEntity = event.getWorld().getTileEntity(event.getPos());
 			if (event instanceof PlayerInteractEvent.RightClickBlock) {
-				event.setCanceled(
-						LockManager.onInteract(block, tileEntity, event.getEntityPlayer(), event.getHand(), event.getWorld(), event.getPos()));
+				event.setCanceled(LockManager.onInteract(block, tileEntity, event.getEntityPlayer(), event.getHand(),
+						event.getWorld(), event.getPos()));
 			}
 		}
 	}

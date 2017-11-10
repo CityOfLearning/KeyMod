@@ -1,6 +1,6 @@
 package com.mrcrayfish.key.gui;
 
-import com.mrcrayfish.key.items.KeyItems;
+import com.mrcrayfish.key.MrCrayfishKeyMod;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -14,7 +14,7 @@ public class SlotKeyRack extends Slot {
 
 	@Override
 	public boolean isItemValid(ItemStack stack) {
-		return ((stack.getItem() == KeyItems.item_key) && stack.hasDisplayName())
-				| (stack.getItem() == KeyItems.item_key_ring);
+		return ((stack.getItem() == MrCrayfishKeyMod.item_key) && stack.hasDisplayName())
+				| (stack.getItem() == MrCrayfishKeyMod.item_key_ring);
 	}
 }

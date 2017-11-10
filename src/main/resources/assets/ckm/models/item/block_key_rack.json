@@ -1,5 +1,5 @@
 {
-	"parent": "ckm:block/key_rack",
+	"parent": "ckm:block/block_key_rack",
 	"display": {
 		"thirdperson": {
 			"rotation": [ 0, 90, 0 ],

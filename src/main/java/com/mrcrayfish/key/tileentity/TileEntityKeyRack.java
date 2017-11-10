@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
@@ -30,10 +29,8 @@ public class TileEntityKeyRack extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound tagCom = new NBTTagCompound();
-		writeToNBT(tagCom);
-		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tagCom);
+	public ITextComponent getDisplayName() {
+		return inventory.getDisplayName();
 	}
 
 	@Override
@@ -67,8 +64,21 @@ public class TileEntityKeyRack extends TileEntity implements IInventory {
 	}
 
 	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		NBTTagCompound tagCom = new NBTTagCompound();
+		writeToNBT(tagCom);
+		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tagCom);
+	}
+
+	@Override
 	public boolean hasCustomName() {
 		return inventory.hasCustomName();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
@@ -145,16 +155,5 @@ public class TileEntityKeyRack extends TileEntity implements IInventory {
 			tagCompound.setString("CustomName", inventory.getName());
 		}
 		return tagCompound;
-	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		return inventory.getDisplayName();
-	}
-
-	@Override
-	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }
