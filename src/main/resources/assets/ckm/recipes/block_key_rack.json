@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"WWW",
+		"NNN"
+	],
+	"key": {
+		"N": {
+			"item": "minecraft:iron_nugget",
+			"data": 0
+		},
+		"W": {
+			"item": "minecraft:log",
+			"data": 1
+		}
+	},
+	"result": {
+		"item": "ckm:block_key_rack",
+		"data": 0,
+		"count": 1
+	}
+}

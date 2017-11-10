@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"NNN",
+		"N N",
+		"NNN"
+	],
+	"key": {
+		"N": {
+			"item": "minecraft:iron_nugget",
+			"data": 0
+		}
+	},
+	"result": {
+		"item": "ckm:item_key_ring",
+		"data": 0,
+		"count": 1
+	}
+}
