@@ -55,18 +55,6 @@ public class MrCrayfishKeyMod {
 		MinecraftForge.EVENT_BUS.register(new KeyEvents());
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
-		// GameRegistry.addRecipe(new ItemStack(KeyItems.item_key), "NNI", 'I',
-		// Items.gold_ingot, 'N', Items.gold_nugget);
-		// GameRegistry.addRecipe(new ItemStack(KeyItems.item_iron_nugget, 9), "I", 'I',
-		// Items.iron_ingot);
-		// GameRegistry.addRecipe(new ItemStack(KeyItems.item_key_ring), "NNN", "N N",
-		// "NNN", 'N',
-		// KeyItems.item_iron_nugget);
-		// GameRegistry.addRecipe(new ItemStack(Items.iron_ingot), "NNN", "NNN", "NNN",
-		// 'N', KeyItems.item_iron_nugget);
-		// GameRegistry.addRecipe(new ItemStack(KeyBlocks.block_key_rack), "WWW", "NNN",
-		// 'W',
-		// new ItemStack(Blocks.log2, 1, 1), 'N', KeyItems.item_iron_nugget);
 	}
 
 	@EventHandler
